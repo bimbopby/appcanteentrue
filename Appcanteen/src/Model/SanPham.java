@@ -5,11 +5,13 @@
  */
 package Model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Administrator
  */
-public class SanPham {
+public class SanPham implements Serializable{
     private String productID,nameSP,unit;
     private double price;
     private String NCC;

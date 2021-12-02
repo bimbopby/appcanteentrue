@@ -5,6 +5,10 @@
  */
 package View;
 
+import Controller.Sanpham_Con;
+import Model.SanPham;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -17,21 +21,28 @@ public class ListSanPhamForm extends javax.swing.JFrame {
 
   
    private DefaultTableModel model;
+   private ArrayList<SanPham> lstsp;
    private String [] cloumnHeader = new String[] {"Mã sản phẩm","Tên","Đơn vị","Giá","Nhà cung cấp"};
     
     public ListSanPhamForm() {
         initComponents();
         setLocationRelativeTo(null);
+        lstsp = new Sanpham_Con().getListSanPham();
         initTable();
     }
 
 
     private void initTable(){
         model = new DefaultTableModel();
-        model.setColumnIdentifiers(cloumnHeader);
-      
-        
+        model.setColumnIdentifiers(cloumnHeader);       
         tblListSP.setModel(model);
+        for(SanPham s : lstsp)
+        {
+            model.addRow(new Object[]{
+                s.getProductID(),s.getNameSP(),s.getUnit(),s.getPrice(),s.getNCC()
+        });
+        }
+        
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -62,13 +73,13 @@ public class ListSanPhamForm extends javax.swing.JFrame {
 
         tblListSP.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Mã sản phẩm", "Tên sản phẩm", "Đơn vị", "Giá", "Nhà cung cấp"
             }
         ));
         jScrollPane1.setViewportView(tblListSP);
@@ -171,6 +182,11 @@ public class ListSanPhamForm extends javax.swing.JFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         btnSave.setText("Lưu");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnReset.setText("Mới");
 
@@ -235,6 +251,28 @@ public class ListSanPhamForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtProIDActionPerformed
 
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        SanPham s = new SanPham();
+        s.setProductID(txtProID.getText());
+        s.setNameSP(txtNameSP.getText());
+        s.setUnit((String) cbxUnit.getSelectedItem());
+        s.setPrice(Double.parseDouble(txtPrice.getText()));
+        s.setNCC(txtNCC.getText());
+        
+        if (new Sanpham_Con().addSP(s)) {
+            JOptionPane.showMessageDialog(rootPane, "thêm thành công");
+            lstsp.add(s);
+        } else { JOptionPane.showMessageDialog(rootPane, "thất bại");
+        }
+        showResult();
+    }//GEN-LAST:event_btnSaveActionPerformed
+            public void showResult(){
+             SanPham s = lstsp.get(lstsp.size()-1);
+        
+            model.addRow(new Object[]{
+                s.getProductID(),s.getNameSP(),s.getUnit(),s.getPrice(),s.getNCC()
+        });
+            }
     /**
      * @param args the command line arguments
      */

@@ -61,7 +61,7 @@ public class ManageAccountForm extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel1.setText("QUẢN LÝ TÀI KHOẢN");
+        jLabel1.setText("QUẢN LÝ NHÂN VIÊN");
 
         jLabel2.setText("Tên:");
 

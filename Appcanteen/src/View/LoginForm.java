@@ -195,7 +195,7 @@ public class LoginForm extends javax.swing.JFrame {
       //  switch(x){
           //case 1:
                 if (user.getUser_type().equalsIgnoreCase("sysadmin")) {
-                    new ListSanPhamForm().setVisible(true);
+                    new ManageAccountForm().setVisible(true);
                     this.dispose();
                 }
                 else if(user.getUser_type().equalsIgnoreCase("manager")){
