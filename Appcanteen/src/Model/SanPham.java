@@ -15,16 +15,26 @@ public class SanPham implements Serializable{
     private String productID,nameSP,unit;
     private double price;
     private String NCC;
+    private int soluong;
 
     public SanPham() {
     }
 
-    public SanPham(String productID, String nameSP, String unit, double price, String NCC) {
+    public SanPham(String productID, String nameSP, String unit, double price, String NCC,int soluong) {
         this.productID = productID;
         this.nameSP = nameSP;
         this.unit = unit;
         this.price = price;
         this.NCC = NCC;
+        this.soluong = soluong;
+    }
+
+    public int getSoluong() {
+        return soluong;
+    }
+
+    public void setSoluong(int soluong) {
+        this.soluong = soluong;
     }
 
    

@@ -27,7 +27,7 @@ public class Sanpham_Con extends DBConfig{
         
     }
     public boolean addSP(SanPham sp){
-        String sql = "insert into product(id_pro, name_pro, unit, price, supplier)"+ "values (?,?,?,?,?)";
+        String sql = "insert into product(id_pro, name_pro, unit, price, supplier,quantity)"+ "values (?,?,?,?,?,?)";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, sp.getProductID());
@@ -35,7 +35,7 @@ public class Sanpham_Con extends DBConfig{
             ps.setString(3, sp.getUnit());
             ps.setDouble(4, sp.getPrice());
             ps.setString(5, sp.getNCC());
-            
+            ps.setInt(6, sp.getSoluong());
             return ps.executeUpdate()>0;
             
         } catch (SQLException ex) {
@@ -57,6 +57,7 @@ public class Sanpham_Con extends DBConfig{
                 s.setUnit(rs.getString("unit"));
                 s.setPrice(rs.getDouble("price"));
                 s.setNCC(rs.getString("supplier"));
+                s.setSoluong(rs.getInt("quantity"));
                 lst.add(s);
 
                 
@@ -65,5 +66,19 @@ public class Sanpham_Con extends DBConfig{
             Logger.getLogger(Sanpham_Con.class.getName()).log(Level.SEVERE, null, ex);
         }
         return lst;
+    }
+    
+     public void XoaSP(SanPham sp){
+        String sql = "delete form product where id_pro=?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, sp.getProductID());
+            ps.executeUpdate();
+                      
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Sanpham_Con.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 }
