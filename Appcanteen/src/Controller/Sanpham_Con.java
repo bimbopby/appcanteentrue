@@ -68,17 +68,17 @@ public class Sanpham_Con extends DBConfig{
         return lst;
     }
     
-     public void XoaSP(SanPham sp){
-        String sql = "delete form product where id_pro=?";
+     public boolean XoaSP(String masp){
+        String sql = "delete from product where id_pro= ?";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, sp.getProductID());
-            ps.executeUpdate();
+            ps.setString(1, masp);
+            return ps.executeUpdate() > 0;
                       
             
         } catch (SQLException ex) {
             Logger.getLogger(Sanpham_Con.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        return false;
     }
 }

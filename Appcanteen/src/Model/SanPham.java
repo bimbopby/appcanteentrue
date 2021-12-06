@@ -12,7 +12,8 @@ import java.io.Serializable;
  * @author Administrator
  */
 public class SanPham implements Serializable{
-    private String productID,nameSP,unit;
+    private String productID;
+    private String nameSP,unit;
     private double price;
     private String NCC;
     private int soluong;

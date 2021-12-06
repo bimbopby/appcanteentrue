@@ -9,6 +9,7 @@ import Controller.Sanpham_Con;
 import Model.SanPham;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -23,7 +24,8 @@ public class ListSanPhamForm extends javax.swing.JFrame {
    private DefaultTableModel model;
    private ArrayList<SanPham> lstsp;
    private String [] cloumnHeader = new String[] {"Mã sản phẩm","Tên","Đơn vị","Giá","Nhà cung cấp","Số lượng"};
-    
+   private int selecIndex;
+    Sanpham_Con spCon = new Sanpham_Con();
     public ListSanPhamForm() {
         initComponents();
         setLocationRelativeTo(null);
@@ -35,14 +37,14 @@ public class ListSanPhamForm extends javax.swing.JFrame {
     private void initTable(){
         model = new DefaultTableModel();
         model.setColumnIdentifiers(cloumnHeader);       
-        tblListSP.setModel(model);
+       
         for(SanPham s : lstsp)
         {
             model.addRow(new Object[]{
                 s.getProductID(),s.getNameSP(),s.getUnit(),s.getPrice(),s.getNCC(),s.getSoluong()
         });
         }
-        
+         tblListSP.setModel(model);
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -66,7 +68,7 @@ public class ListSanPhamForm extends javax.swing.JFrame {
         txtquantity = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         btnAdd = new javax.swing.JButton();
-        btnFix = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -84,6 +86,11 @@ public class ListSanPhamForm extends javax.swing.JFrame {
                 "Mã sản phẩm", "Tên sản phẩm", "Đơn vị", "Giá", "Nhà cung cấp", "Số lượng"
             }
         ));
+        tblListSP.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblListSPMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblListSP);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -198,10 +205,10 @@ public class ListSanPhamForm extends javax.swing.JFrame {
             }
         });
 
-        btnFix.setText("Sửa");
-        btnFix.addActionListener(new java.awt.event.ActionListener() {
+        btnEdit.setText("Sửa");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFixActionPerformed(evt);
+                btnEditActionPerformed(evt);
             }
         });
 
@@ -220,7 +227,7 @@ public class ListSanPhamForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnFix, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
@@ -231,7 +238,7 @@ public class ListSanPhamForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDelete)
-                    .addComponent(btnFix)
+                    .addComponent(btnEdit)
                     .addComponent(btnAdd))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -280,7 +287,7 @@ public class ListSanPhamForm extends javax.swing.JFrame {
         s.setNCC(txtNCC.getText());
         s.setSoluong(Integer.parseInt(txtquantity.getText()));
         
-        if (new Sanpham_Con().addSP(s)) {
+        if (spCon.addSP(s)) {
             JOptionPane.showMessageDialog(rootPane, "thêm thành công");
             lstsp.add(s);
         } else { JOptionPane.showMessageDialog(rootPane, "thất bại");
@@ -288,19 +295,50 @@ public class ListSanPhamForm extends javax.swing.JFrame {
         showResult();
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnFixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFixActionPerformed
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnFixActionPerformed
+        selecIndex = tblListSP.getSelectedRow();
+        if (lstsp.size()==0){
+            JOptionPane.showMessageDialog(rootPane, "chưa có sản phẩm");
+        }else if (selecIndex == -1) {
+            JOptionPane.showMessageDialog(rootPane, "chọn 1 sản phẩm để sửa");
+        }else{
+            String id_pro = (String) model.getValueAt(selecIndex, 0);
+            new EditSPForm().setVisible(true);
+        }
+            
+    }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         
-    }//GEN-LAST:event_btnDeleteActionPerformed
-    
-    public void loadCbx(){
+            if (JOptionPane.showConfirmDialog(rootPane, "Bạn có chắc chắn muốn xóa không !" ) == JOptionPane.YES_OPTION) {
+             //    SanPham s = new SanPham();
+                selecIndex = tblListSP.getSelectedRow();
+                String masp = ""+ tblListSP.getValueAt(selecIndex, 0);
+                boolean isXoa = spCon.XoaSP(masp);
+                 if (isXoa) {
+                    JOptionPane.showMessageDialog(rootPane, "xóa thành công");
+                    showResult();
+                } else {
+                      JOptionPane.showMessageDialog(rootPane, "xóa thất bại");
+                }
+                         
+        }
         
-    }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void tblListSPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblListSPMouseClicked
+        // TODO add your handling code here:
+        int row  = tblListSP.getSelectedRow();
+        txtProID.setText(tblListSP.getValueAt(row, 0).toString());
+        txtNameSP.setText(tblListSP.getValueAt(row, 1).toString());
+        
+        txtProID.setText(tblListSP.getValueAt(row, 0).toString());
+    }//GEN-LAST:event_tblListSPMouseClicked
+    
+  
     public void showResult(){
-             SanPham s = lstsp.get(lstsp.size()-1);
+            SanPham s = lstsp.get(lstsp.size()-1);
         
             model.addRow(new Object[]{
                 s.getProductID(),s.getNameSP(),s.getUnit(),s.getPrice(),s.getNCC(),s.getSoluong()
@@ -344,7 +382,7 @@ public class ListSanPhamForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnFix;
+    private javax.swing.JButton btnEdit;
     private javax.swing.JComboBox<String> cbxUnit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
