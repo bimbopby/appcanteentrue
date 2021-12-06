@@ -1,5 +1,8 @@
 -- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
+<<<<<<< HEAD
 -- aab
+=======
+>>>>>>> fd8fa5bdee4dfae5470638afeb8f6fc766dab7e8
 -- Host: localhost    Database: canteen_kma
 -- ------------------------------------------------------
 -- Server version	8.0.27
