@@ -43,6 +43,45 @@ public class Sanpham_Con extends DBConfig{
         }
         return false;
     }
+    public boolean EditSP(SanPham sp){
+        String sql = "update product set name_pro=?, unit=?, price=?, supplier=?,quantity=? where id_pro=?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(6, sp.getProductID());
+            ps.setString(1, sp.getNameSP());
+            ps.setString(2, sp.getUnit());
+            ps.setDouble(3, sp.getPrice());
+            ps.setString(4, sp.getNCC());
+            ps.setInt(5, sp.getSoluong());
+            return ps.executeUpdate()>0;
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Sanpham_Con.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    public SanPham detailSP(String sp_id){
+        String sql = "select name_pro, unit, price, supplier,quantity from product where id_pro=?"; 
+        SanPham s = null;
+        try {
+           
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+           
+            while(rs.next()){
+                s  = new SanPham();
+                s.setProductID(rs.getString("id_pro"));
+                s.setNameSP(rs.getString("name_pro"));
+                s.setUnit(rs.getString("unit"));
+                s.setPrice(rs.getDouble("price"));
+                s.setNCC(rs.getString("supplier"));
+                s.setSoluong(rs.getInt("quantity"));    
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Sanpham_Con.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      return s;
+    }
     public ArrayList<SanPham> getListSanPham(){
         ArrayList<SanPham> lst = new ArrayList<>();
        String sql = "select * from product" ;

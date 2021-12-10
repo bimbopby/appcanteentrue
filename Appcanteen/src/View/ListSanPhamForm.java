@@ -5,6 +5,7 @@
  */
 package View;
 
+import Controller.Clock;
 import Controller.Sanpham_Con;
 import Model.SanPham;
 import java.util.ArrayList;
@@ -31,20 +32,19 @@ public class ListSanPhamForm extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         lstsp = new Sanpham_Con().getListSanPham();
         initTable();
+        
+        initClock();
     }
-
+    private void initClock(){
+        Clock cl = new Clock(lblClock);
+        cl.start();
+    }
 
     private void initTable(){
         model = new DefaultTableModel();
         model.setColumnIdentifiers(cloumnHeader);       
        
-        for(SanPham s : lstsp)
-        {
-            model.addRow(new Object[]{
-                s.getProductID(),s.getNameSP(),s.getUnit(),s.getPrice(),s.getNCC(),s.getSoluong()
-        });
-        }
-         tblListSP.setModel(model);
+       
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -70,8 +70,14 @@ public class ListSanPhamForm extends javax.swing.JFrame {
         btnAdd = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
+        lblClock = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Danh sách sản phẩm", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 15))); // NOI18N
 
@@ -243,22 +249,32 @@ public class ListSanPhamForm extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        lblClock.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblClock.setForeground(new java.awt.Color(255, 0, 255));
+        lblClock.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblClock.setText("8:8:8 AM");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblClock)))
                 .addContainerGap())
-            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(43, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(lblClock)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -279,6 +295,9 @@ public class ListSanPhamForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtProIDActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+       if(txtProID.getText().equalsIgnoreCase(""))
+           JOptionPane.showMessageDialog(rootPane, "Nhập sản phẩm");
+       else{
         SanPham s = new SanPham();
         s.setProductID(txtProID.getText());
         s.setNameSP(txtNameSP.getText());
@@ -294,7 +313,7 @@ public class ListSanPhamForm extends javax.swing.JFrame {
         }
         showResult();
     }//GEN-LAST:event_btnAddActionPerformed
-
+    }
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
         selecIndex = tblListSP.getSelectedRow();
@@ -318,11 +337,12 @@ public class ListSanPhamForm extends javax.swing.JFrame {
                 boolean isXoa = spCon.XoaSP(masp);
                  if (isXoa) {
                     JOptionPane.showMessageDialog(rootPane, "xóa thành công");
-                    showResult();
+                    this.dispose();
+                    new ListSanPhamForm().setVisible(true);
                 } else {
                       JOptionPane.showMessageDialog(rootPane, "xóa thất bại");
                 }
-                         
+                 
         }
         
     }//GEN-LAST:event_btnDeleteActionPerformed
@@ -335,8 +355,20 @@ public class ListSanPhamForm extends javax.swing.JFrame {
         
         txtProID.setText(tblListSP.getValueAt(row, 0).toString());
     }//GEN-LAST:event_tblListSPMouseClicked
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        showList();
+    }//GEN-LAST:event_formWindowOpened
     
-  
+    public void showList(){
+         for(SanPham s : lstsp)
+        {
+            model.addRow(new Object[]{
+                s.getProductID(),s.getNameSP(),s.getUnit(),s.getPrice(),s.getNCC(),s.getSoluong()
+        });
+        }
+         tblListSP.setModel(model);
+    }
     public void showResult(){
             SanPham s = lstsp.get(lstsp.size()-1);
         
@@ -394,6 +426,7 @@ public class ListSanPhamForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblClock;
     private javax.swing.JTable tblListSP;
     private javax.swing.JTextField txtNCC;
     private javax.swing.JTextField txtNameSP;
